@@ -1,0 +1,74 @@
+buildscript {
+    ext {
+        springBootVersion = '2.7.9'
+        set('springCloudVersion', "2021.0.6")
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+allprojects {}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group 'com.sixthou'
+    version '1.0-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+}
+
+project(':external-api') {
+    dependencies {
+        implementation project(':client:core')
+        implementation project(':client:kakao')
+    }
+}
+
+project(':client') {
+    subprojects {
+        dependencies {
+            implementation project(':infra:h2')
+        }
+    }
+}
+
+project(':client:core') {
+}
+
+project(':client:kakao') {
+}
+
+project(':infra') {
+}
+
+project(':infra:h2') {
+}
+

@@ -1,0 +1,11 @@
+rootProject.name = 'blog-search'
+include 'external-api'
+include 'infra'
+include 'infra:h2'
+findProject(':infra:h2')?.name = 'h2'
+include 'client'
+include 'client:core'
+findProject(':client:core')?.name = 'core'
+include 'client:kakao'
+findProject(':client:kakao')?.name = 'kakao'
+
